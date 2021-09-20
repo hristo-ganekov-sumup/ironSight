@@ -114,34 +114,129 @@ func GetSGsfromState(stateFilename string) (common.Sgs, error) {
 
 }
 
-//func GetSGsfromState(stateFilename string) (common.Sgs,error) {
-//	exploded := common.NewSgExploded()
-//	state, err := tfstate.ParseTerraformStateFile(stateFilename)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	//SG Rules
-//	for _, resource := range state.Resources {
-//		if resource.Type == "aws_security_group_rule" {
-//			for _, instance := range resource.Instances {
-//				awsSgRuleAttributes := &AwsSecurityGroupRuleAttributes{}
-//				err = json.Unmarshal(instance.AttributesRaw, awsSgRuleAttributes)
-//				if err != nil {
-//					return nil, err
-//				}
-//				entriesIngress := []common.TargetPair{}
-//				//TODO: get the ingress entries
-//				entriesEgress := []common.TargetPair{}
-//				//TODO: get the egress entries
-//				exploded_container := common.InEg{
-//					Ingress: entriesIngress,
-//					Egress:  entriesEgress,
-//				}
-//				(*exploded)[awsSgRuleAttributes.SecurityGroupID] = exploded_container
-//				//sgRuleMap[awsSgRuleAttributes.SecurityGroupID] = append(sgRuleMap[awsSgRuleAttributes.SecurityGroupID], awsSgRuleAttributes.ID)
-//			}
-//		}
-//	}
-//	return *exploded,nil
-//}
+func GetSGsfromStateRules(stateFilename string) (common.Sgs,error) {
+	exploded := common.NewSgExploded()
+	state, err := tfstate.ParseTerraformStateFile(stateFilename)
+	if err != nil {
+		return nil, err
+	}
+
+	//SG Rules
+	for _, resource := range state.Resources {
+		if resource.Type == "aws_security_group_rule" {
+			for _, instance := range resource.Instances {
+				awsSgRuleAttributes := &AwsSecurityGroupRuleAttributes{}
+				err = json.Unmarshal(instance.AttributesRaw, awsSgRuleAttributes)
+				if err != nil {
+					return nil, err
+				}
+
+
+				//fmt.Println(awsSgRuleAttributes.SecurityGroupID,awsSgRuleAttributes.Type)
+				//fmt.Println(awsSgRuleAttributes.FromPort,awsSgRuleAttributes.ToPort)
+				//fmt.Println(awsSgRuleAttributes.CidrBlocks)
+				//fmt.Println(awsSgRuleAttributes.SourceSecurityGroupID)
+				//fmt.Println(awsSgRuleAttributes.SecurityGroupID)
+				//os.Exit(1)
+
+				var port string
+				entriesIngress := []common.TargetPair{}
+				entriesEgress := []common.TargetPair{}
+
+				exploded_container := common.InEg{
+					Ingress: entriesIngress,
+					Egress:  entriesEgress,
+				}
+
+				//Format the port entry
+				if awsSgRuleAttributes.FromPort == awsSgRuleAttributes.ToPort {
+					if awsSgRuleAttributes.FromPort == 0 {
+						port = "-1"
+					} else {
+						port = strconv.Itoa(int(awsSgRuleAttributes.FromPort))
+					}
+				} else {
+					port = strconv.Itoa(int(awsSgRuleAttributes.FromPort)) + ":" + strconv.Itoa(int(awsSgRuleAttributes.ToPort))
+				}
+
+				//If the map key does not exist - create it
+				if _, ok := (*exploded)[awsSgRuleAttributes.SecurityGroupID]; !ok {
+					//create SG in the map
+					(*exploded)[awsSgRuleAttributes.SecurityGroupID] = exploded_container
+				}
+
+				//If the entry is INGRESS
+				if awsSgRuleAttributes.Type == "ingress" {
+					entriesIngress = (*exploded)[awsSgRuleAttributes.SecurityGroupID].Ingress
+					entriesEgress = (*exploded)[awsSgRuleAttributes.SecurityGroupID].Egress
+
+					//IF there is CIDR Blocks
+					if len(awsSgRuleAttributes.CidrBlocks) > 0 {
+						for _, target := range awsSgRuleAttributes.CidrBlocks {
+							entriesIngress = append(entriesIngress, common.TargetPair{
+								Target: target,
+								Port:   port,
+							})
+						}
+					}
+					//IF there is SG references
+					if len(awsSgRuleAttributes.SourceSecurityGroupID) > 0 {
+						entriesIngress = append(entriesIngress, common.TargetPair{
+							Target: awsSgRuleAttributes.SourceSecurityGroupID,
+							Port:   port,
+						})
+					}
+
+					//IF its a self rule
+					if awsSgRuleAttributes.Self {
+						entriesIngress = append(entriesIngress, common.TargetPair{
+							Target: awsSgRuleAttributes.SecurityGroupID,
+							Port:   port,
+						})
+					}
+				}
+
+				//If the entry is EGRESS
+				if awsSgRuleAttributes.Type == "egress" {
+					entriesIngress = (*exploded)[awsSgRuleAttributes.SecurityGroupID].Ingress
+					entriesEgress = (*exploded)[awsSgRuleAttributes.SecurityGroupID].Egress
+
+					//IF there is CIDR Blocks
+					if len(awsSgRuleAttributes.CidrBlocks) > 0 {
+						for _, target := range awsSgRuleAttributes.CidrBlocks {
+							entriesEgress = append(entriesEgress, common.TargetPair{
+								Target: target,
+								Port:   port,
+							})
+						}
+					}
+					//IF there is SG references
+					if len(awsSgRuleAttributes.SourceSecurityGroupID) > 0 {
+						entriesEgress = append(entriesEgress, common.TargetPair{
+							Target: awsSgRuleAttributes.SourceSecurityGroupID,
+							Port:   port,
+						})
+					}
+
+					//IF its a self rule
+					if awsSgRuleAttributes.Self {
+						entriesEgress = append(entriesEgress, common.TargetPair{
+							Target: awsSgRuleAttributes.SecurityGroupID,
+							Port:   port,
+						})
+					}
+
+				}
+
+				exploded_container = common.InEg{
+						Ingress: entriesIngress,
+						Egress:  entriesEgress,
+					}
+
+				(*exploded)[awsSgRuleAttributes.SecurityGroupID] = exploded_container
+
+			}
+		}
+	}
+	return *exploded,nil
+}

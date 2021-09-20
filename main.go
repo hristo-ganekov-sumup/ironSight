@@ -51,11 +51,17 @@ func main() {
 	var sgs []string
 	//Read the state
 
-	fromState, err := sg.GetSGsfromState("live.tfstate")
+	fromState, err := sg.GetSGsfromStateRules("live.tfstate")
 	if err != nil {
 		panic(err)
 	}
 
+
+	//for k,v := range fromState {
+	//	fmt.Println(k,"Ingress:",v.Ingress)
+	//	fmt.Println(k,"Egress:",v.Egress)
+	//}
+	//return
 	//Get security groups that are processed from the state so we can pass them to the API parser
 	for k, _ := range fromState {
 		//sgs to get statement on from AWS API; This should be taken from the autosg state
