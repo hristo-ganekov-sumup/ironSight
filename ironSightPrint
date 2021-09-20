@@ -1,0 +1,547 @@
+{
+  Description: "Auto security group for apigateway",
+  GroupId: "sg-01a7b1f096ca6247c",
+  GroupName: "autosg-live-apigateway",
+  IpPermissions: [{
+      IpProtocol: "-1",
+      IpRanges: [
+        {
+          CidrIp: "10.5.8.0/23",
+          Description: "Allow apigateway to be reached by pci-cidr"
+        },
+        {
+          CidrIp: "10.5.72.0/23",
+          Description: "Allow apigateway to be reached by pci-cidr"
+        },
+        {
+          CidrIp: "10.5.136.0/23",
+          Description: "Allow apigateway to be reached by pci-cidr"
+        },
+        {
+          CidrIp: "10.5.0.0/23",
+          Description: "Allow apigateway to be reached by public-cidr"
+        },
+        {
+          CidrIp: "10.5.64.0/23",
+          Description: "Allow apigateway to be reached by public-cidr"
+        },
+        {
+          CidrIp: "10.5.128.0/23",
+          Description: "Allow apigateway to be reached by public-cidr"
+        }
+      ],
+      UserIdGroupPairs: [{
+          GroupId: "sg-01a7b1f096ca6247c",
+          UserId: "861104244336"
+        },{
+          Description: "Allow apigateway to be reached by eks-nodes-pci-supporting",
+          GroupId: "sg-0ef0149e2594ea91f",
+          UserId: "861104244336"
+        }]
+    },{
+      FromPort: 443,
+      IpProtocol: "tcp",
+      ToPort: 443,
+      UserIdGroupPairs: [
+        {
+          Description: "Allow access from sumup_pci_tainted_nodes",
+          GroupId: "sg-01ccdc2b230008a5c",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access from hardware-mobile-edge",
+          GroupId: "sg-02650cbe780803390",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access from ecom-card-widget",
+          GroupId: "sg-0288f9994fd0cd48b",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access from solo-edge",
+          GroupId: "sg-05f262dee8ab4d958",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access from p2p-admin",
+          GroupId: "sg-07154fdc5a9b22084",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access from acquisition-shop",
+          GroupId: "sg-07ef3838111f9a235",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access from p2p-backend",
+          GroupId: "sg-0ac6777eced928299",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access from device-hub",
+          GroupId: "sg-0e08f894144742cf4",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access from payments-edge",
+          GroupId: "sg-0ec766d5994e501bc",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access from online-payments",
+          GroupId: "sg-0fc34b39634f68b18",
+          UserId: "861104244336"
+        }
+      ]
+    }],
+  IpPermissionsEgress: [
+    {
+      IpProtocol: "-1",
+      IpRanges: [
+        {
+          CidrIp: "10.5.8.0/23",
+          Description: "Allow apigateway to reach pci-cidr"
+        },
+        {
+          CidrIp: "10.5.72.0/23",
+          Description: "Allow apigateway to reach pci-cidr"
+        },
+        {
+          CidrIp: "10.5.136.0/23",
+          Description: "Allow apigateway to reach pci-cidr"
+        },
+        {
+          CidrIp: "10.5.160.155/32",
+          Description: "Allow apigateway to reach consul-pci-sup-nlb"
+        },
+        {
+          CidrIp: "10.5.158.138/32",
+          Description: "Allow apigateway to reach consul-pci-sup-nlb"
+        },
+        {
+          CidrIp: "10.5.157.40/32",
+          Description: "Allow apigateway to reach consul-pci-sup-nlb"
+        }
+      ],
+      UserIdGroupPairs: [{
+          GroupId: "sg-01a7b1f096ca6247c",
+          UserId: "861104244336"
+        },{
+          Description: "Allow apigateway to reach classic-vault",
+          GroupId: "sg-05f6ed453c98d3e75",
+          UserId: "861104244336"
+        },{
+          Description: "Allow apigateway to reach eks-nodes-pci-supporting",
+          GroupId: "sg-0ef0149e2594ea91f",
+          UserId: "861104244336"
+        }]
+    },
+    {
+      FromPort: 6380,
+      IpProtocol: "tcp",
+      IpRanges: [
+        {
+          CidrIp: "10.5.4.0/23",
+          Description: "Allow apigateway to reach redis"
+        },
+        {
+          CidrIp: "10.5.68.0/23",
+          Description: "Allow apigateway to reach redis"
+        },
+        {
+          CidrIp: "10.5.132.0/23",
+          Description: "Allow apigateway to reach redis"
+        },
+        {
+          CidrIp: "10.5.144.0/22",
+          Description: "Allow apigateway to reach redis"
+        },
+        {
+          CidrIp: "10.5.148.0/22",
+          Description: "Allow apigateway to reach redis"
+        },
+        {
+          CidrIp: "10.5.152.0/22",
+          Description: "Allow apigateway to reach redis"
+        },
+        {
+          CidrIp: "10.5.168.0/21",
+          Description: "Allow apigateway to reach redis"
+        },
+        {
+          CidrIp: "10.5.176.0/21",
+          Description: "Allow apigateway to reach redis"
+        },
+        {
+          CidrIp: "10.5.184.0/21",
+          Description: "Allow apigateway to reach redis"
+        }
+      ],
+      ToPort: 6380
+    },
+    {
+      FromPort: 4317,
+      IpProtocol: "tcp",
+      IpRanges: [
+        {
+          CidrIp: "10.5.4.0/23",
+          Description: "Allow apigateway to reach otlpgrpc"
+        },
+        {
+          CidrIp: "10.5.68.0/23",
+          Description: "Allow apigateway to reach otlpgrpc"
+        },
+        {
+          CidrIp: "10.5.132.0/23",
+          Description: "Allow apigateway to reach otlpgrpc"
+        },
+        {
+          CidrIp: "10.5.144.0/22",
+          Description: "Allow apigateway to reach otlpgrpc"
+        },
+        {
+          CidrIp: "10.5.148.0/22",
+          Description: "Allow apigateway to reach otlpgrpc"
+        },
+        {
+          CidrIp: "10.5.152.0/22",
+          Description: "Allow apigateway to reach otlpgrpc"
+        },
+        {
+          CidrIp: "10.5.168.0/21",
+          Description: "Allow apigateway to reach otlpgrpc"
+        },
+        {
+          CidrIp: "10.5.176.0/21",
+          Description: "Allow apigateway to reach otlpgrpc"
+        },
+        {
+          CidrIp: "10.5.184.0/21",
+          Description: "Allow apigateway to reach otlpgrpc"
+        }
+      ],
+      ToPort: 4317
+    },
+    {
+      FromPort: 443,
+      IpProtocol: "tcp",
+      IpRanges: [
+        {
+          CidrIp: "50.18.110.159/32",
+          Description: "Allow apigateway to reach friendbuy"
+        },
+        {
+          CidrIp: "10.5.12.0/23",
+          Description: "Allow apigateway to reach pci-inner-cidr"
+        },
+        {
+          CidrIp: "10.5.76.0/23",
+          Description: "Allow apigateway to reach pci-inner-cidr"
+        },
+        {
+          CidrIp: "10.5.140.0/23",
+          Description: "Allow apigateway to reach pci-inner-cidr"
+        },
+        {
+          CidrIp: "185.147.172.99/32",
+          Description: "Allow apigateway to reach ecom-processor-oppwa"
+        },
+        {
+          CidrIp: "185.147.172.67/32",
+          Description: "Allow apigateway to reach ecom-processor-oppwa"
+        },
+        {
+          CidrIp: "185.147.172.66/32",
+          Description: "Allow apigateway to reach ecom-processor-oppwa"
+        },
+        {
+          CidrIp: "52.210.45.252/32",
+          Description: "Allow apigateway to reach settlement-old"
+        },
+        {
+          CidrIp: "138.59.163.65/32",
+          Description: "Allow apigateway to reach ecom-processor-itau"
+        },
+        {
+          CidrIp: "10.5.4.0/23",
+          Description: "Allow apigateway to reach private-cidr"
+        },
+        {
+          CidrIp: "10.5.68.0/23",
+          Description: "Allow apigateway to reach private-cidr"
+        },
+        {
+          CidrIp: "10.5.132.0/23",
+          Description: "Allow apigateway to reach private-cidr"
+        },
+        {
+          CidrIp: "10.5.144.0/22",
+          Description: "Allow apigateway to reach private-cidr"
+        },
+        {
+          CidrIp: "10.5.148.0/22",
+          Description: "Allow apigateway to reach private-cidr"
+        },
+        {
+          CidrIp: "10.5.152.0/22",
+          Description: "Allow apigateway to reach private-cidr"
+        },
+        {
+          CidrIp: "10.5.168.0/21",
+          Description: "Allow apigateway to reach private-cidr"
+        },
+        {
+          CidrIp: "10.5.176.0/21",
+          Description: "Allow apigateway to reach private-cidr"
+        },
+        {
+          CidrIp: "10.5.184.0/21",
+          Description: "Allow apigateway to reach private-cidr"
+        }
+      ],
+      ToPort: 443,
+      UserIdGroupPairs: [
+        {
+          Description: "Allow access to id-mapping-service",
+          GroupId: "sg-003933b45576c7140",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to payment-pci",
+          GroupId: "sg-0072a7ff21d93d7a7",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to mobile-payments-voucher",
+          GroupId: "sg-007df67b8233a69a2",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to mfa-gateway",
+          GroupId: "sg-00da80dc417c51181",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to partner-admission",
+          GroupId: "sg-0162c6087b102a571",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to sb-core-banking",
+          GroupId: "sg-0203a2b8d3b941e5e",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow apigateway to reach eks-masters-pci-supporting",
+          GroupId: "sg-023da5dff518316e0",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to mobile-payments-tokens",
+          GroupId: "sg-02533e0b98cd08f9d",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to partners-attribution",
+          GroupId: "sg-0296df6365453ba18",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to partners-notifications",
+          GroupId: "sg-039e5eea2ff0ddbea",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to referrals",
+          GroupId: "sg-044f948f936dfb774",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to transactions-history",
+          GroupId: "sg-0459c0f223956b1e9",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to pos-cube-edge",
+          GroupId: "sg-04fb35203ff87dfa8",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to pos-checkout-service",
+          GroupId: "sg-05cc33608471a09bc",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to ze-card",
+          GroupId: "sg-05cd0a71749943e54",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to pos-sales-receipts",
+          GroupId: "sg-05f968d5275f24032",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to p2p-admin",
+          GroupId: "sg-07154fdc5a9b22084",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to pos-web-edge",
+          GroupId: "sg-0718f4d419b1c6c89",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to lending-engine",
+          GroupId: "sg-07acac0d7f06454dd",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to pos-catalog-service-rest",
+          GroupId: "sg-07de8f8b97ecd4682",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to acquisition-shop",
+          GroupId: "sg-07ef3838111f9a235",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to pos-import-manager",
+          GroupId: "sg-0849cbbc1a2b23044",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to transactions",
+          GroupId: "sg-086675f5fa3ca7794",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to notifications",
+          GroupId: "sg-08c2042d29b749e12",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to la-tassa",
+          GroupId: "sg-08f153f89d325ab26",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to transactions-receipts",
+          GroupId: "sg-093e0fefaf896dbd0",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to pos-catalog-image-service",
+          GroupId: "sg-0968939a3715184e2",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to feature-toggles",
+          GroupId: "sg-09f6b27ad2b580992",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to pos-reporting-service",
+          GroupId: "sg-0a011f5a8c5245c97",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to partners",
+          GroupId: "sg-0a7b9bbe368c9a5ea",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to p2p-backend",
+          GroupId: "sg-0ac6777eced928299",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to br-standalone-activation",
+          GroupId: "sg-0b1c27bac18daafdb",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to sms",
+          GroupId: "sg-0b70002bad1c4e893",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to moneyflow",
+          GroupId: "sg-0b7d8e240abc23123",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to sse-read-articles-service",
+          GroupId: "sg-0b9769f4d00abc6a0",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to risk-management",
+          GroupId: "sg-0caeb4a0fd69d7ba7",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to pos-platform-users-consumer",
+          GroupId: "sg-0da0fe2206bc1273f",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to payout-history",
+          GroupId: "sg-0de982f25f39006ee",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to users",
+          GroupId: "sg-0eacb11f557f8754a",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to prepaid-card",
+          GroupId: "sg-0ecb659104947c37d",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to ppro-apm-gateway",
+          GroupId: "sg-0f6e3e57eb031a98f",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to bank-accounts",
+          GroupId: "sg-0faa703ada089002b",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to online-payments",
+          GroupId: "sg-0fc34b39634f68b18",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to checkouts",
+          GroupId: "sg-0fc94222aff687cb2",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to ze-fees",
+          GroupId: "sg-0fefa766c786c4fa4",
+          UserId: "861104244336"
+        },
+        {
+          Description: "Allow access to commission",
+          GroupId: "sg-0ff966b1881548b8d",
+          UserId: "861104244336"
+        }
+      ]
+    }
+  ],
+  OwnerId: "861104244336",
+  Tags: [{
+      Key: "Name",
+      Value: "autosg-live-apigateway"
+    },{
+      Key: "Managed",
+      Value: "auto-security-group terraform module"
+    }],
+  VpcId: "vpc-43145727"
+}
