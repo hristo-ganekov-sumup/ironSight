@@ -7,6 +7,8 @@ import (
 	"strconv"
 )
 
+
+//Get the SGs structure from SG objects in state
 func GetSGsfromState(stateFilename string) (common.Sgs, error) {
 	exploded := common.NewSgExploded()
 	state, err := tfstate.ParseTerraformStateFile(stateFilename)
@@ -114,6 +116,7 @@ func GetSGsfromState(stateFilename string) (common.Sgs, error) {
 
 }
 
+//Get the SGs structure from SG RULE objects in state
 func GetSGsfromStateRules(stateFilename string) (common.Sgs,error) {
 	exploded := common.NewSgExploded()
 	state, err := tfstate.ParseTerraformStateFile(stateFilename)
@@ -132,13 +135,6 @@ func GetSGsfromStateRules(stateFilename string) (common.Sgs,error) {
 				}
 
 
-				//fmt.Println(awsSgRuleAttributes.SecurityGroupID,awsSgRuleAttributes.Type)
-				//fmt.Println(awsSgRuleAttributes.FromPort,awsSgRuleAttributes.ToPort)
-				//fmt.Println(awsSgRuleAttributes.CidrBlocks)
-				//fmt.Println(awsSgRuleAttributes.SourceSecurityGroupID)
-				//fmt.Println(awsSgRuleAttributes.SecurityGroupID)
-				//os.Exit(1)
-
 				var port string
 				entriesIngress := []common.TargetPair{}
 				entriesEgress := []common.TargetPair{}
@@ -150,7 +146,7 @@ func GetSGsfromStateRules(stateFilename string) (common.Sgs,error) {
 
 				//Format the port entry
 				if awsSgRuleAttributes.FromPort == awsSgRuleAttributes.ToPort {
-					if awsSgRuleAttributes.FromPort == 0 {
+					if awsSgRuleAttributes.FromPort == 0 || awsSgRuleAttributes.ToPort == 0 {
 						port = "-1"
 					} else {
 						port = strconv.Itoa(int(awsSgRuleAttributes.FromPort))

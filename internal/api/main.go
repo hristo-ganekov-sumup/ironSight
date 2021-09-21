@@ -27,7 +27,11 @@ func produceEntries(perm *ec2.IpPermission) []common.TargetPair {
 		pto_value := strconv.Itoa(int(*pto))
 		pfrom_value := strconv.Itoa(int(*pfrom))
 		if pto_value == pfrom_value {
-			port = pto_value
+			if pto_value == "0" {
+				port = "-1"
+			} else {
+				port = pto_value
+			}
 		} else {
 			port = pfrom_value + ":" + pto_value
 		}
