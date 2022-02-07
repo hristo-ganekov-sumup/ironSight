@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/hristo-ganekov-sumup/ironSight/internal/api"
 	"github.com/hristo-ganekov-sumup/ironSight/internal/common"
@@ -47,21 +48,23 @@ func difference(s1, s2 []common.TargetPair) ([]common.TargetPair, []common.Targe
 	return onlyins1, onlyins2
 }
 
+
+var region = flag.String("region", "eu-west-1", "AWS Region")
+var state_file = flag.String("state", "live.tfstate", "State file")
+
+func init() {
+	flag.Parse()
+}
+
 func main() {
 	var sgs []string
 	//Read the state
 
-	fromState, err := sg.GetSGsfromStateRules("live.tfstate")
+	fromState, err := sg.GetSGsfromStateRules(*state_file)
 	if err != nil {
 		panic(err)
 	}
 
-
-	//for k,v := range fromState {
-	//	fmt.Println(k,"Ingress:",v.Ingress)
-	//	fmt.Println(k,"Egress:",v.Egress)
-	//}
-	//return
 	//Get security groups that are processed from the state so we can pass them to the API parser
 	for k, _ := range fromState {
 		//sgs to get statement on from AWS API; This should be taken from the autosg state
@@ -70,7 +73,7 @@ func main() {
 	}
 
 	//Pull the statements in predefined exploded format; Should be the same as those red from the state file
-	fromAPI, err := api.GetSGsfromAPI(sgs)
+	fromAPI, err := api.GetSGsfromAPI(*region, sgs)
 	if err != nil {
 		panic(err)
 	}

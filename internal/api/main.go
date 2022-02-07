@@ -9,9 +9,9 @@ import (
 	"strconv"
 )
 
-func initAwsSvc() *ec2.EC2 {
+func initAwsSvc(region string) *ec2.EC2 {
 	sess := session.Must(session.NewSession(&aws.Config{
-		Region: aws.String("eu-west-1")}))
+		Region: aws.String(region)}))
 
 	svc := ec2.New(sess, &aws.Config{})
 	return svc
@@ -63,8 +63,8 @@ func produceEntries(perm *ec2.IpPermission) []common.TargetPair {
 	return out
 }
 
-func GetSGsfromAPI(sgIds []string) (common.Sgs,error){
-	svc := initAwsSvc()
+func GetSGsfromAPI(region string,sgIds []string) (common.Sgs,error){
+	svc := initAwsSvc(region)
 	dryrun := false
 	exploded := common.NewSgExploded()
 	AwsSgIds := common.PointersOf(sgIds)
